@@ -74,6 +74,12 @@ components:
   schemas:
     Movie:
       type: object
+      required:
+        - id
+        - title
+        - imageUrl
+        - genres
+        - details
       properties:
         id:
           type: integer
@@ -95,6 +101,11 @@ components:
 
     MovieDetails:
       type: object
+      required:
+        - runtime
+        - releaseDate
+        - overview
+        - availableOn
       properties:
         runtime:
           type: integer
@@ -113,6 +124,10 @@ components:
 
     MovieProviders:
       type: object
+      required:
+        - name
+        - logoUrl
+        - displayOrder
       properties:
         name:
           type: string
