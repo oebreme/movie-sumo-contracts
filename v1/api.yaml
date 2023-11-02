@@ -10,25 +10,8 @@ servers:
 tags:
   - name: Movie
     description: Everything about Movies
-  - name: List
-    description: Everything about Lists
 
 paths:
-  /movies:
-    get:
-      tags:
-        - Movie
-      summary: get all movies
-      description: returns all Movies
-      responses:
-        '200':
-          description: successful operation#/components
-          content:
-            application/json:
-              schema:
-                type: array
-                items:
-                  $ref: '#/components/schemas/Movie'
   /movies/{movieId}:
     get:
       tags:
@@ -54,31 +37,39 @@ paths:
           description: invalid Id supplied
         '404':
           description: movie not found
-  /lists/{userId}:
+  /movies/search/{queryTerm}/{page}:
     get:
       tags:
-        - List
-      summary: get all Lists for a user
-      description: returns a collection of Lists with saved Movies
+        - Movie
+      summary: search for a movie by a given String
+      description: returns multiple Movies which match to some extend with the provided String
       parameters:
-        - name: userId
+        - name: queryTerm
           in: path
-          description: id of User for which to return the collection of Lists
+          description: provided String to search for
+          required: true
+          schema:
+            type: string
+        - name: page
+          in: path
+          description: page number to determine which Movies to fetch
           required: true
           schema:
             type: integer
-            format: int64
+            format: int32
       responses:
         '200':
           description: successful operation
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/List'
+                type: array
+                items:
+                  $ref: '#/components/schemas/Movie'
         '400':
           description: invalid Id supplied
         '404':
-          description: list not found
+          description: movie not found
 components:
   schemas:
     Movie:
@@ -87,23 +78,51 @@ components:
         id:
           type: integer
           format: int64
-          example: 705177
-          readOnly: true
+          example: 872585
         title:
           type: string
-          example: Departed
+          example: Oppenheimer
         imageUrl:
           type: string
-          example: 'TODO'
-    List:
+          example: 'https://image.tmdb.org/t/p/w500/8Gxv8gSFCU0XGDykEGv7zR1n2ua.jpg'
+        genres:
+          type: array
+          items:
+            type: string
+            example: "Drama"
+        details:
+          $ref: '#/components/schemas/MovieDetails'
+
+    MovieDetails:
       type: object
       properties:
-        id:
+        runtime:
           type: integer
-          format: int64
-          example: 412201
-          readOnly: true
+          format: int32
+          example: 181
+        releaseDate:
+          type: string
+          example: 2023-07-19
+        overview:
+          type: string
+          example: "The story of J. Robert Oppenheimer’s role in the development of the atomic bomb during World War II."
+        availableOn:
+          type: array
+          items:
+            $ref: '#/components/schemas/MovieProviders'
+
+    MovieProviders:
+      type: object
+      properties:
         name:
           type: string
-          example: Saved for later 3
+          example: Apple TV
+        logoUrl:
+          type: string
+          example: https://image.tmdb.org/t/p/w500/peURlLlr8jggOwK53fJ5wdQl05y.jpg
+        displayOrder:
+          type: integer
+          format: int32
+          description: order for provider relevancy - "1" being most relevant provider
+          example: 4
 
