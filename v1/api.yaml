@@ -79,7 +79,6 @@ components:
         - title
         - imageUrl
         - genres
-        - details
       properties:
         id:
           type: integer
