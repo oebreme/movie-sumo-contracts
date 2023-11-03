@@ -119,9 +119,9 @@ components:
         availableOn:
           type: array
           items:
-            $ref: '#/components/schemas/MovieProviders'
+            $ref: '#/components/schemas/MovieProvider'
 
-    MovieProviders:
+    MovieProvider:
       type: object
       required:
         - name
