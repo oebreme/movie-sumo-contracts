@@ -1,0 +1,697 @@
+openapi: 3.0.3
+info:
+  title: Movie Sumo API
+  description: |-
+  
+
+  version: 2.0.0
+servers:
+  - url: 'http://localhost:8080/api/v2'
+  - url: 'https://movie-sumo-gateway.oebreme.dev/api/v2'
+tags:
+  - name: Movie
+  - name: Image
+  - name: Search
+  - name: User
+  - name: Lists
+  - name: Watchlist
+  - name: Favorites
+  - name: Stream Provider
+  - name: Language
+
+
+paths:
+  #
+  # MOVIES
+  #
+  /movies/{movieId}:
+    get:
+      tags:
+        - Movie
+      summary: get a movie by Id
+      description: returns a single Movie
+      parameters:
+        - name: movieId
+          in: path
+          description: id of Movie to return
+          required: true
+          schema:
+            type: integer
+            format: int64
+      responses:
+        '200':
+          description: successful operation
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Movie'
+        '400':
+          description: invalid Id supplied
+        '404':
+          description: Movie not found
+
+
+  /movies/{movieId}/preview:
+    get:
+      tags:
+        - Movie
+      summary: get a preview of a movie
+      description: returns a smaller/reduced Movie object for preview purposes
+      parameters:
+        - name: movieId
+          in: path
+          description: id of Preview to return
+          required: true
+          schema:
+            type: integer
+            format: int64
+      responses:
+        '200':
+          description: successful operation
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/MoviePreview'
+        '400':
+          description: invalid Id supplied
+        '404':
+          description: Preview not found
+
+
+  /movies/{movieId}/streamproviders:
+    get:
+      tags:
+        - Movie
+      summary: get all watch-providers for a movie
+      description: returns a list of watch-providers which have the specific movie in their collection
+      parameters:
+        - name: movieId
+          in: path
+          description: id of Preview to return
+          required: true
+          schema:
+            type: integer
+            format: int64
+      responses:
+        '200':
+          description: successful operation
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/StreamProviderList'
+
+
+  /movies/{movieId}/similar:
+    get:
+      tags:
+        - Movie
+      summary: get similar movies of a movie
+      description: returns a list with similar movies, based on genre and story-summary-keywords
+      parameters:
+        - name: movieId
+          in: path
+          description: id of Movie which the similar results will be based on
+          required: true
+          schema:
+            type: integer
+            format: int64
+      responses:
+        '200':
+          description: successful operation
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/SimilarMovieList'
+
+
+  #
+  # IMAGE
+  #
+  /images/{movieId}/poster:
+    get:
+      tags:
+        - Image
+      summary: get the poster-image of a movie
+      description: returns a URI to the box-office-poster image of a movie
+      parameters:
+        - name: movieId
+          in: path
+          description: id of Movie
+          required: true
+          schema:
+            type: integer
+            format: int64
+      responses:
+        '200':
+          description: successful operation
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/MoviePoster'
+
+
+  /images/{movieId}/backdrop:
+    get:
+      tags:
+        - Image
+      summary: get the backdrop-image of a movie
+      description: returns a URI to the background image of the corresponding box-office-poster
+      parameters:
+        - name: movieId
+          in: path
+          description: id of Movie
+          required: true
+          schema:
+            type: integer
+            format: int64
+      responses:
+        '200':
+          description: successful operation
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/MovieBackdrop'
+
+
+  /movies/trends:
+    get:
+      tags:
+        - Movie
+      summary: get a list of currently trending Movies
+      description: returns a list of currently trending Movies
+      responses:
+        '200':
+          description: successful operation
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/MovieTrends'
+
+
+  /movies/best:
+    get:
+      tags:
+        - Movie
+      summary: get a list of the best rated Movies
+      description: returns a list of the best rated Movies
+      responses:
+        '200':
+          description: successful operation
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/BestRatedMovies'
+
+
+  /movies/upcoming:
+    get:
+      tags:
+        - Movie
+      summary: get a list of upcoming new Movies
+      description: returns a list of unreleased and upcoming Movies
+      responses:
+        '200':
+          description: successful operation
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/UpcomingMovies'
+
+
+  /search/{queryTerm}/{page}:
+    get:
+      tags:
+        - Search
+      summary: search for a movie by a given String and page
+      description: returns multiple Movies which match to some extend with the provided String
+      parameters:
+        - name: queryTerm
+          in: path
+          description: provided String to search for
+          required: true
+          schema:
+            type: string
+        - name: page
+          in: path
+          description: page number to determine which Movies to fetch, if no page is provided it will default to the first page
+          required: false
+          schema:
+            type: integer
+            format: int32
+      responses:
+        '200':
+          description: successful operation
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Movie'
+        '400':
+          description: invalid Id supplied
+        '404':
+          description: movie not found
+
+
+
+
+  #
+  # USERS
+  #
+  /users/{userId}:
+    get:
+      tags:
+        - User
+      summary: get information about a user
+      description: returns a user object containing information about a user
+      parameters:
+        - name: userId
+          in: path
+          description: provided user identifier
+          required: true
+          schema:
+            type: integer
+            format: int64
+      responses:
+        '200':
+          description: successful operation
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/User'
+
+
+  #
+  # LISTS
+  #
+  /lists/{userId}:
+    get:
+      tags:
+        - Lists
+      summary: get lists of a specified user
+      description: returns all lists of a user
+      parameters:
+        - name: userId
+          in: path
+          description: provided user identifier
+          required: true
+          schema:
+            type: integer
+            format: int64
+      responses:
+        '200':
+          description: successful operation
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/MovieList'
+
+
+    post:
+      tags:
+        - Lists
+      summary: create a new and empty List for a specified user
+      description: returns the newly created list of a user
+      parameters:
+        - name: userId
+          in: path
+          description: provided user identifier
+          required: true
+          schema:
+            type: integer
+            format: int64
+      responses:
+        '201':
+          description: successful operation
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/List'
+
+
+  /lists/{userId}/{listId}:
+    get:
+      tags:
+        - Lists
+      summary: get a list by its list-id for a user
+      description: returns a single list
+      parameters:
+        - name: userId
+          in: path
+          description: provided user identifier
+          required: true
+          schema:
+            type: integer
+            format: int64
+        - name: listId
+          in: path
+          description: provided list identifier
+          required: true
+          schema:
+            type: integer
+            format: int64
+      responses:
+        '200':
+          description: successful operation
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/MovieList'
+
+
+    delete:
+      tags:
+        - Lists
+      summary: delete a specified list
+      description: xxx
+      parameters:
+        - name: userId
+          in: path
+          description: provided user identifier
+          required: true
+          schema:
+            type: integer
+            format: int64
+        - name: listId
+          in: path
+          description: provided list identifier
+          required: true
+          schema:
+            type: integer
+            format: int64
+      responses:
+        '204':
+          description: successful operation
+
+
+  /lists/{userId}/{listId}/add:
+    post:
+      tags:
+        - Lists
+      summary: add a movie to a list
+      description: returns the newly added movie
+      parameters:
+        - name: userId
+          in: path
+          description: provided user identifier
+          required: true
+          schema:
+            type: integer
+            format: int64
+        - name: listId
+          in: path
+          description: provided list identifier
+          required: true
+          schema:
+            type: integer
+            format: int64
+      responses:
+        '201':
+          description: successful operation
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Movie'
+
+
+
+
+  /lists/{userId}/{listId}/remove:
+    delete:
+      tags:
+        - Lists
+      summary: delete a movie from a list
+      description: xxx
+      parameters:
+        - name: userId
+          in: path
+          description: provided user identifier
+          required: true
+          schema:
+            type: integer
+            format: int64
+        - name: listId
+          in: path
+          description: provided list identifier
+          required: true
+          schema:
+            type: integer
+            format: int64
+      responses:
+        '204':
+          description: successful operation
+
+  #
+  # WATCHLIST
+  #
+  /watchlist/{userId}:
+    get:
+      tags:
+        - Watchlist
+      summary: get the watchlist for a user
+
+  /watchlist/{userId}/add:
+    post:
+      tags:
+        - Watchlist
+      summary: add a movie to the watchlist of a user
+
+  /watchlist/{userId}/remove:
+    delete:
+      tags:
+        - Watchlist
+      summary: remove a movie from the watchlist of a user
+
+
+  #
+  # FAVORITES
+  #
+  /favorites/{userId}:
+    get:
+      tags:
+        - Favorites
+      summary: get the favorites for a user
+
+  /favorites/{userId}/add:
+    post:
+      tags:
+        - Favorites
+      summary: add a movie to favorites of a user
+
+  /favorites/{userId}/remove:
+    delete:
+      tags:
+        - Favorites
+      summary: delete a movie from favorites of a user
+
+
+  # TODO: into User-object
+  #  /users/{userId}/streamproviders:
+  #    get:
+  #      tags:
+  #        - User
+
+
+  #
+  # STREAM PROVIDERS
+  #
+  /streamproviders:
+    get:
+      tags:
+        - Stream Provider
+      summary: get all currently supported streaming providers
+      description: returns a list of streaming providers
+      responses:
+        '200':
+          description: successful operation
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/StreamProviderList'
+
+  /streamproviders/{userId}/add:
+    post:
+      tags:
+        - Stream Provider
+      summary: add a stream provider to a user
+
+  /streamproviders/{userId}/remove:
+    delete:
+      tags:
+        - Stream Provider
+      summary: removes a stream provider from a user
+
+
+  # TODO: into User-object
+  #  /users/{userId}/languages:
+  #    get:
+  #      tags:
+  #        - User
+
+
+  #
+  # LANGUAGES
+  #
+  /languages:
+    get:
+      tags:
+        - Language
+      summary: get all currently supported languages
+      description: returns a list of Language objects containing all languages which are currently supported by the app
+      responses:
+        '200':
+          description: successful operation
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Language'
+
+  /languages/{userId}/add:
+    post:
+      tags:
+        - Language
+      summary: add a spoken language to a user
+      description: add a language which the user is able to speak
+      parameters:
+        - name: userId
+          in: path
+          description: provided user identifier
+          example: '9389a6da-8d43-4049-ad28-048777751f68'
+          required: true
+          schema:
+            type: string
+
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Language'
+
+      responses:
+        '201':
+          description: successful operation
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Language'
+
+
+  /languages/{userId}/remove/{isoId}:
+    delete:
+      tags:
+        - Language
+      summary: remove a spoken language from a user
+      description: xxx
+      parameters:
+        - name: userId
+          in: path
+          description: provided user identifier
+          example: '9389a6da-8d43-4049-ad28-048777751f68'
+          required: true
+          schema:
+            type: string
+        - name: isoId
+          in: path
+          description: provided ISO 639-1 string representation of a language
+
+      responses:
+        '204':
+          description: successful operation
+
+
+
+
+components:
+  schemas:
+    Movie:
+      type: object
+      required:
+        - id
+        - title
+        - imageUrl
+        - genres
+      properties:
+        id:
+          type: integer
+          format: int64
+          example: 872585
+        title:
+          type: string
+          example: Oppenheimer
+        imageUrl:
+          type: string
+          example: 'https://image.tmdb.org/t/p/w500/8Gxv8gSFCU0XGDykEGv7zR1n2ua.jpg'
+        genres:
+          type: array
+          items:
+            type: string
+            example: "Drama"
+        details:
+          $ref: '#/components/schemas/MovieDetails'
+
+    MovieDetails:
+      type: object
+      required:
+        - runtime
+        - releaseDate
+        - overview
+        - availableOn
+      properties:
+        runtime:
+          type: integer
+          format: int32
+          example: 181
+        releaseDate:
+          type: string
+          example: 2023-07-19
+        overview:
+          type: string
+          example: "The story of J. Robert Oppenheimer’s role in the development of the atomic bomb during World War II."
+        availableOn:
+          type: array
+          items:
+            $ref: '#/components/schemas/MovieProvider'
+
+    MovieProvider:
+      type: object
+      required:
+        - name
+        - logoUrl
+        - displayOrder
+      properties:
+        name:
+          type: string
+          example: Apple TV
+        logoUrl:
+          type: string
+          example: https://image.tmdb.org/t/p/w500/peURlLlr8jggOwK53fJ5wdQl05y.jpg
+        displayOrder:
+          type: integer
+          format: int32
+          description: order for provider relevancy - "1" being most relevant provider
+          example: 4
+
+
+    #
+    # LANGUAGES
+    #
+    Language:
+      type: object
+      required:
+        - isoId
+      properties:
+        isoId:
+          type: string
+          example: 'de'
+          description: ISO 639-1 string representation of a language
