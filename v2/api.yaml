@@ -4,7 +4,7 @@ info:
   description: |-
   
 
-  version: 2.0.0
+  version: 2.0.0x-work-in-progress
 servers:
   - url: 'http://localhost:8080/api/v2'
   - url: 'https://movie-sumo-gateway.oebreme.dev/api/v2'
@@ -71,7 +71,7 @@ paths:
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/MoviePreview'
+                $ref: '#/components/schemas/TODO'
         '400':
           description: invalid Id supplied
         '404':
@@ -121,7 +121,7 @@ paths:
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/SimilarMovieList'
+                $ref: '#/components/schemas/TODO'
 
 
   #
@@ -147,7 +147,7 @@ paths:
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/MoviePoster'
+                $ref: '#/components/schemas/TODO'
 
 
   /images/{movieId}/backdrop:
@@ -170,7 +170,7 @@ paths:
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/MovieBackdrop'
+                $ref: '#/components/schemas/TODO'
 
 
   /movies/trends:
@@ -185,7 +185,7 @@ paths:
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/MovieTrends'
+                $ref: '#/components/schemas/TODO'
 
 
   /movies/best:
@@ -200,7 +200,7 @@ paths:
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/BestRatedMovies'
+                $ref: '#/components/schemas/TODO'
 
 
   /movies/upcoming:
@@ -215,7 +215,7 @@ paths:
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/UpcomingMovies'
+                $ref: '#/components/schemas/TODO'
 
 
   /search/{queryTerm}/{page}:
@@ -278,7 +278,7 @@ paths:
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/User'
+                $ref: '#/components/schemas/TODO'
 
 
   #
@@ -306,7 +306,7 @@ paths:
               schema:
                 type: array
                 items:
-                  $ref: '#/components/schemas/MovieList'
+                  $ref: '#/components/schemas/TODO'
 
 
     post:
@@ -330,7 +330,7 @@ paths:
               schema:
                 type: array
                 items:
-                  $ref: '#/components/schemas/List'
+                  $ref: '#/components/schemas/TODO'
 
 
   /lists/{userId}/{listId}:
@@ -362,7 +362,7 @@ paths:
               schema:
                 type: array
                 items:
-                  $ref: '#/components/schemas/MovieList'
+                  $ref: '#/components/schemas/TODO'
 
 
     delete:
@@ -477,18 +477,67 @@ paths:
       tags:
         - Favorites
       summary: get the favorites for a user
+      description: returns a list of 'marked as favorite'-movies of a user
+      responses:
+        '200':
+          description: successful operation
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Favorites'
 
   /favorites/{userId}/add:
     post:
       tags:
         - Favorites
       summary: add a movie to favorites of a user
+      description: xxx
+      parameters:
+        - name: userId
+          in: path
+          description: provided user identifier
+          example: '9389a6da-8d43-4049-ad28-048777751f68'
+          required: true
+          schema:
+            type: string
 
-  /favorites/{userId}/remove:
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/TODO'
+
+      responses:
+        '201':
+          description: successful operation
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Movie'
+
+  /favorites/{userId}/remove/{movieId}:
     delete:
       tags:
         - Favorites
       summary: delete a movie from favorites of a user
+      description: removes a 'marked as favorite'-movie from favorites of a user
+      parameters:
+        - name: userId
+          in: path
+          description: provided user identifier
+          example: '9389a6da-8d43-4049-ad28-048777751f68'
+          required: true
+          schema:
+            type: string
+        - name: movieId
+          in: path
+          description: provided identifier for a movie
+
+      responses:
+        '204':
+          description: successful operation
+
 
 
   # TODO: into User-object
@@ -506,28 +555,66 @@ paths:
       tags:
         - Stream Provider
       summary: get all currently supported streaming providers
-      description: returns a list of streaming providers
+      description: returns a list of StreamingProviders objects containing all streaming providers which are currently supported by the app
       responses:
         '200':
           description: successful operation
           content:
             application/json:
               schema:
-                type: array
-                items:
-                  $ref: '#/components/schemas/StreamProviderList'
+                $ref: '#/components/schemas/StreamProviderList'
 
   /streamproviders/{userId}/add:
     post:
       tags:
         - Stream Provider
       summary: add a stream provider to a user
+      description: add a stream provider which the user has an active subscription for
+      parameters:
+        - name: userId
+          in: path
+          description: provided user identifier
+          example: '9389a6da-8d43-4049-ad28-048777751f68'
+          required: true
+          schema:
+            type: string
 
-  /streamproviders/{userId}/remove:
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/StreamProvider'
+
+      responses:
+        '201':
+          description: successful operation
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/StreamProvider'
+
+  /streamproviders/{userId}/remove/{providerId}:
     delete:
       tags:
         - Stream Provider
       summary: removes a stream provider from a user
+      description: removes a stream provider by its providerId
+      parameters:
+        - name: userId
+          in: path
+          description: provided user identifier
+          example: '9389a6da-8d43-4049-ad28-048777751f68'
+          required: true
+          schema:
+            type: string
+        - name: providerId
+          in: path
+          description: provided identifier for a stream provider
+
+      responses:
+        '204':
+          description: successful operation
 
 
   # TODO: into User-object
@@ -552,9 +639,7 @@ paths:
           content:
             application/json:
               schema:
-                type: array
-                items:
-                  $ref: '#/components/schemas/Language'
+                $ref: '#/components/schemas/Language'
 
   /languages/{userId}/add:
     post:
@@ -586,13 +671,12 @@ paths:
               schema:
                 $ref: '#/components/schemas/Language'
 
-
   /languages/{userId}/remove/{isoId}:
     delete:
       tags:
         - Language
       summary: remove a spoken language from a user
-      description: xxx
+      description: removes a spoken language by its ISO 639-1 string representation
       parameters:
         - name: userId
           in: path
@@ -614,6 +698,11 @@ paths:
 
 components:
   schemas:
+
+    TODO:
+      type: object
+
+
     Movie:
       type: object
       required:
@@ -659,29 +748,63 @@ components:
           type: string
           example: "The story of J. Robert Oppenheimer’s role in the development of the atomic bomb during World War II."
         availableOn:
-          type: array
-          items:
-            $ref: '#/components/schemas/MovieProvider'
+            $ref: '#/components/schemas/StreamProviderList'
 
-    MovieProvider:
+    #
+    # FAVORITES
+    #
+    Favorites:
       type: object
       required:
+        - count
+        - favorites
+      properties:
+        count:
+          type: integer
+          format: int32
+          description: number of movies contained in the list
+        favorites:
+          type: array
+          items:
+            $ref: '#/components/schemas/Movie'
+          description: list of favorite movies of a user
+
+
+    #
+    # STREAM PROVIDER
+    #
+    StreamProvider:
+      type: object
+      required:
+        - id
         - name
         - logoUrl
         - displayOrder
       properties:
+        providerId:
+          type: string
+          example: 'd780d614-d3e0-4fdd-8979-487dcd074bb1'
         name:
           type: string
-          example: Apple TV
+          example: 'Apple TV'
         logoUrl:
           type: string
-          example: https://image.tmdb.org/t/p/w500/peURlLlr8jggOwK53fJ5wdQl05y.jpg
+          example: 'https://image.tmdb.org/t/p/w500/peURlLlr8jggOwK53fJ5wdQl05y.jpg'
         displayOrder:
           type: integer
           format: int32
           description: order for provider relevancy - "1" being most relevant provider
           example: 4
 
+    StreamProviderList:
+      type: object
+      required:
+        - providers
+      properties:
+        providers:
+          type: array
+          items:
+            $ref: '#/components/schemas/StreamProvider'
 
     #
     # LANGUAGES
@@ -695,3 +818,13 @@ components:
           type: string
           example: 'de'
           description: ISO 639-1 string representation of a language
+
+    LanguageList:
+      type: object
+      required:
+        - languages
+      properties:
+        languages:
+          type: array
+          items:
+            $ref: '#/components/schemas/Language'
