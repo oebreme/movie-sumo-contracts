@@ -3,7 +3,7 @@ info:
   title: Movie Sumo API
   description: |-
 
-  version: 2.0.0
+  version: 2.0.1
 servers:
   - url: 'http://localhost:8080/api/v2'
   - url: 'https://movie-sumo-gateway.oebreme.dev/api/v2'
@@ -240,8 +240,8 @@ paths:
             type: string
         - name: page
           in: path
-          description: page number to determine which Movies to fetch, if no page is provided it will default to the first page
-          required: false
+          description: page number to determine which Movies to fetch
+          required: true
           schema:
             type: integer
             format: int32
