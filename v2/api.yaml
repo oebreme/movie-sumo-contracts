@@ -19,6 +19,13 @@ tags:
   - name: Stream Provider
   - name: Language
 
+# TODO: parameter-descriptions an oberste ebene direkt unter pfad setzen
+# TODO: dtos definieren
+# TODO: Alle ids auf string überprüfen
+# TODO: Spelling bei ähnlichen endpunkten überprüfen
+# TODO: Listen-Ressourcen anstelle von type-array
+# TODO: Listen-Ressourcen mit sinnvollen Meta-Informationen bestückt wie 'count'?
+
 
 paths:
   #
@@ -268,17 +275,18 @@ paths:
         - name: userId
           in: path
           description: provided user identifier
+          example: '9389a6da-8d43-4049-ad28-048777751f68'
           required: true
           schema:
-            type: integer
-            format: int64
+            type: string
+
       responses:
         '200':
           description: successful operation
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/TODO'
+                $ref: '#/components/schemas/User'
 
 
   #
@@ -288,26 +296,24 @@ paths:
     get:
       tags:
         - Lists
-      summary: get lists of a specified user
+      summary: get all lists of a specified user
       description: returns all lists of a user
       parameters:
         - name: userId
           in: path
           description: provided user identifier
+          example: '9389a6da-8d43-4049-ad28-048777751f68'
           required: true
           schema:
-            type: integer
-            format: int64
+            type: string
+
       responses:
         '200':
           description: successful operation
           content:
             application/json:
               schema:
-                type: array
-                items:
-                  $ref: '#/components/schemas/TODO'
-
+                $ref: '#/components/schemas/TODO'
 
     post:
       tags:
@@ -318,134 +324,136 @@ paths:
         - name: userId
           in: path
           description: provided user identifier
+          example: '9389a6da-8d43-4049-ad28-048777751f68'
           required: true
           schema:
-            type: integer
-            format: int64
+            type: string
+
       responses:
         '201':
           description: successful operation
           content:
             application/json:
               schema:
-                type: array
-                items:
-                  $ref: '#/components/schemas/TODO'
-
+                $ref: '#/components/schemas/TODO'
 
   /lists/{userId}/{listId}:
     get:
       tags:
         - Lists
-      summary: get a list by its list-id for a user
-      description: returns a single list
+      summary: get a list by its listId for a user
+      description: returns a single list of movies
       parameters:
         - name: userId
           in: path
           description: provided user identifier
+          example: '9389a6da-8d43-4049-ad28-048777751f68'
           required: true
           schema:
-            type: integer
-            format: int64
+            type: string
         - name: listId
           in: path
-          description: provided list identifier
+          description: provided user identifier
+          example: 'f4294ba5-45b8-427b-a152-e08220f06eb2'
           required: true
           schema:
-            type: integer
-            format: int64
+            type: string
+
       responses:
         '200':
           description: successful operation
           content:
             application/json:
               schema:
-                type: array
-                items:
-                  $ref: '#/components/schemas/TODO'
+                $ref: '#/components/schemas/TODO'
 
 
     delete:
       tags:
         - Lists
       summary: delete a specified list
-      description: xxx
+      description: deletes a specified list of movies entirely
       parameters:
         - name: userId
           in: path
           description: provided user identifier
+          example: '9389a6da-8d43-4049-ad28-048777751f68'
           required: true
           schema:
-            type: integer
-            format: int64
+            type: string
         - name: listId
           in: path
-          description: provided list identifier
+          description: provided user identifier
+          example: 'f4294ba5-45b8-427b-a152-e08220f06eb2'
           required: true
           schema:
-            type: integer
-            format: int64
+            type: string
       responses:
         '204':
           description: successful operation
-
 
   /lists/{userId}/{listId}/add:
     post:
       tags:
         - Lists
       summary: add a movie to a list
-      description: returns the newly added movie
+      description: adds a movie to a specified list of movies
       parameters:
         - name: userId
           in: path
           description: provided user identifier
+          example: '9389a6da-8d43-4049-ad28-048777751f68'
           required: true
           schema:
-            type: integer
-            format: int64
+            type: string
         - name: listId
           in: path
-          description: provided list identifier
+          description: provided user identifier
+          example: 'f4294ba5-45b8-427b-a152-e08220f06eb2'
           required: true
           schema:
-            type: integer
-            format: int64
+            type: string
+
       responses:
         '201':
           description: successful operation
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/Movie'
+                $ref: '#/components/schemas/TODO'
 
-
-
-
-  /lists/{userId}/{listId}/remove:
+  /lists/{userId}/{listId}/remove/{movieId}:
     delete:
       tags:
         - Lists
       summary: delete a movie from a list
-      description: xxx
+      description: deletes a movie from a specified list of movies
       parameters:
         - name: userId
           in: path
           description: provided user identifier
+          example: '9389a6da-8d43-4049-ad28-048777751f68'
           required: true
           schema:
-            type: integer
-            format: int64
+            type: string
         - name: listId
           in: path
-          description: provided list identifier
+          description: provided user identifier
+          example: 'f4294ba5-45b8-427b-a152-e08220f06eb2'
           required: true
           schema:
-            type: integer
-            format: int64
+            type: string
+        - name: movieId
+          in: path
+          description: provided identifier for a movie
+          required: true
+          schema:
+            type: string
+
       responses:
         '204':
           description: successful operation
+
 
   #
   # WATCHLIST
@@ -455,18 +463,78 @@ paths:
       tags:
         - Watchlist
       summary: get the watchlist for a user
+      description: returns a list of 'to watch later'-movies of a user
+      parameters:
+        - name: userId
+          in: path
+          description: provided user identifier
+          example: '9389a6da-8d43-4049-ad28-048777751f68'
+          required: true
+          schema:
+            type: string
+
+      responses:
+        '200':
+          description: successful operation
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/TODO'
 
   /watchlist/{userId}/add:
     post:
       tags:
         - Watchlist
       summary: add a movie to the watchlist of a user
+      description: add a movie to the list of 'to watch later' of a user
+      parameters:
+        - name: userId
+          in: path
+          description: provided user identifier
+          example: '9389a6da-8d43-4049-ad28-048777751f68'
+          required: true
+          schema:
+            type: string
 
-  /watchlist/{userId}/remove:
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/TODO'
+
+      responses:
+        '201':
+          description: successful operation
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Movie'
+
+  /watchlist/{userId}/remove/{movieId}:
     delete:
       tags:
         - Watchlist
       summary: remove a movie from the watchlist of a user
+      description: removes a 'to watch later'-movie from watchlist of a user
+      parameters:
+        - name: userId
+          in: path
+          description: provided user identifier
+          example: '9389a6da-8d43-4049-ad28-048777751f68'
+          required: true
+          schema:
+            type: string
+        - name: movieId
+          in: path
+          description: provided identifier for a movie
+          required: true
+          schema:
+            type: string
+
+      responses:
+        '204':
+          description: successful operation
 
 
   #
@@ -478,6 +546,15 @@ paths:
         - Favorites
       summary: get the favorites for a user
       description: returns a list of 'marked as favorite'-movies of a user
+      parameters:
+        - name: userId
+          in: path
+          description: provided user identifier
+          example: '9389a6da-8d43-4049-ad28-048777751f68'
+          required: true
+          schema:
+            type: string
+
       responses:
         '200':
           description: successful operation
@@ -491,7 +568,7 @@ paths:
       tags:
         - Favorites
       summary: add a movie to favorites of a user
-      description: xxx
+      description: add a movie to the list of 'marked as favorites' of a user
       parameters:
         - name: userId
           in: path
@@ -533,18 +610,13 @@ paths:
         - name: movieId
           in: path
           description: provided identifier for a movie
+          required: true
+          schema:
+            type: string
 
       responses:
         '204':
           description: successful operation
-
-
-
-  # TODO: into User-object
-  #  /users/{userId}/streamproviders:
-  #    get:
-  #      tags:
-  #        - User
 
 
   #
@@ -611,17 +683,13 @@ paths:
         - name: providerId
           in: path
           description: provided identifier for a stream provider
+          required: true
+          schema:
+            type: string
 
       responses:
         '204':
           description: successful operation
-
-
-  # TODO: into User-object
-  #  /users/{userId}/languages:
-  #    get:
-  #      tags:
-  #        - User
 
 
   #
@@ -688,6 +756,9 @@ paths:
         - name: isoId
           in: path
           description: provided ISO 639-1 string representation of a language
+          required: true
+          schema:
+            type: string
 
       responses:
         '204':
@@ -703,21 +774,24 @@ components:
       type: object
 
 
+    #
+    # MOVIE
+    #
     Movie:
       type: object
       required:
-        - id
+        - movieId
         - title
         - imageUrl
         - genres
       properties:
-        id:
+        movieId:
           type: integer
           format: int64
           example: 872585
         title:
           type: string
-          example: Oppenheimer
+          example: 'Oppenheimer'
         imageUrl:
           type: string
           example: 'https://image.tmdb.org/t/p/w500/8Gxv8gSFCU0XGDykEGv7zR1n2ua.jpg'
@@ -737,18 +811,82 @@ components:
         - overview
         - availableOn
       properties:
+        overview:
+          description: brief introduction to the plot of the movie
+          type: string
+          example: "The story of J. Robert Oppenheimer’s role in the development of the atomic bomb during World War II."
         runtime:
+          description: length of the movie in minutes
           type: integer
           format: int32
           example: 181
         releaseDate:
+          description: first release of the movie anywhere in the world
           type: string
+          format: date
           example: 2023-07-19
-        overview:
-          type: string
-          example: "The story of J. Robert Oppenheimer’s role in the development of the atomic bomb during World War II."
         availableOn:
-            $ref: '#/components/schemas/StreamProviderList'
+          $ref: '#/components/schemas/StreamProviderList'
+        ratingAverage:
+          description: floating point number representing user ratings of the movie
+          type: number
+          format: float
+          example: 8.119
+        ratingVoteCount:
+          description: number of votes which are used to calculate the ratingAverage
+          type: integer
+          format: int32
+          example: 5854
+
+    #
+    # USER
+    #
+    User:
+      type: object
+      required:
+        - userId
+        - email
+        - username
+        - profilePictureUrl
+        - settings
+      properties:
+        userId:
+          description: provided user identifier
+          example: '9389a6da-8d43-4049-ad28-048777751f68'
+          type: string
+        email:
+          description: email of the user
+          example: 'wald.guenther@provider.de'
+          type: string
+        username:
+          description: additional short name for displaying purposes - it is automatically build from the e-mail (everything pre-'@' symbol)
+          example: 'wald.guenther'
+          type: string
+        profilePictureUrl:
+          description: URI which points to the profile picture of the user
+          example: 'https://s.gravatar.com/avatar/31ab088c3283f6facde0474b9443e141?s=480&r=pg&d=https%3A%2F%2Fcdn.auth0.com%2Favatars%2Fcl.png'
+          type: string
+        settings:
+          $ref: '#/components/schemas/UserSettings'
+
+    UserSettings:
+      type: object
+      required:
+        - spokenLanguages
+        - subscribedStreamProviders
+
+      properties:
+        spokenLanguages:
+          description: a list of Languages the user is able to understand
+          type: array
+          items:
+            $ref: '#/components/schemas/Language'
+        subscribedStreamProviders:
+          description: a list of StreamProviders the user is currently subscribed to
+          type: array
+          items:
+            $ref: '#/components/schemas/StreamProvider'
+
 
     #
     # FAVORITES
@@ -797,6 +935,7 @@ components:
           example: 4
 
     StreamProviderList:
+      description: information about where this movie is available for streaming, renting or buying
       type: object
       required:
         - providers
