@@ -2,12 +2,12 @@ openapi: 3.0.3
 info:
   title: Movie Sumo API
   description: |-
-  
 
-  version: 2.0.0x-work-in-progress
+  version: 2.0.0
 servers:
   - url: 'http://localhost:8080/api/v2'
   - url: 'https://movie-sumo-gateway.oebreme.dev/api/v2'
+
 tags:
   - name: Movie
   - name: Image
@@ -18,14 +18,6 @@ tags:
   - name: Favorites
   - name: Stream Provider
   - name: Language
-
-# TODO: parameter-descriptions an oberste ebene direkt unter pfad setzen
-# TODO: dtos definieren
-# TODO: Alle ids auf string überprüfen
-# TODO: Spelling bei ähnlichen endpunkten überprüfen
-# TODO: Listen-Ressourcen anstelle von type-array
-# TODO: Listen-Ressourcen mit sinnvollen Meta-Informationen bestückt wie 'count'?
-
 
 paths:
   #
@@ -40,7 +32,7 @@ paths:
       parameters:
         - name: movieId
           in: path
-          description: id of Movie to return
+          description: identifier of Movie to return
           required: true
           schema:
             type: integer
@@ -67,7 +59,7 @@ paths:
       parameters:
         - name: movieId
           in: path
-          description: id of Preview to return
+          description: id of MoviePreview to return
           required: true
           schema:
             type: integer
@@ -78,7 +70,7 @@ paths:
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/TODO'
+                $ref: '#/components/schemas/MoviePreview'
         '400':
           description: invalid Id supplied
         '404':
@@ -128,7 +120,9 @@ paths:
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/TODO'
+                type: array
+                items:
+                  $ref: '#/components/schemas/MoviePreview'
 
 
   #
@@ -154,7 +148,7 @@ paths:
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/TODO'
+                $ref: '#/components/schemas/Poster'
 
 
   /images/{movieId}/backdrop:
@@ -177,7 +171,7 @@ paths:
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/TODO'
+                $ref: '#/components/schemas/Backdrop'
 
 
   /movies/trends:
@@ -192,7 +186,9 @@ paths:
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/TODO'
+                type: array
+                items:
+                  $ref: '#/components/schemas/MoviePreview'
 
 
   /movies/best:
@@ -207,7 +203,9 @@ paths:
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/TODO'
+                type: array
+                items:
+                  $ref: '#/components/schemas/MoviePreview'
 
 
   /movies/upcoming:
@@ -222,7 +220,9 @@ paths:
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/TODO'
+                type: array
+                items:
+                  $ref: '#/components/schemas/MoviePreview'
 
 
   /search/{queryTerm}/{page}:
@@ -279,6 +279,7 @@ paths:
           required: true
           schema:
             type: string
+            format: uuid
 
       responses:
         '200':
@@ -306,6 +307,7 @@ paths:
           required: true
           schema:
             type: string
+            format: uuid
 
       responses:
         '200':
@@ -313,7 +315,9 @@ paths:
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/TODO'
+                type: array
+                items:
+                  $ref: '#/components/schemas/List'
 
     post:
       tags:
@@ -328,6 +332,7 @@ paths:
           required: true
           schema:
             type: string
+            format: uuid
 
       responses:
         '201':
@@ -335,7 +340,7 @@ paths:
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/TODO'
+                $ref: '#/components/schemas/List'
 
   /lists/{userId}/{listId}:
     get:
@@ -351,6 +356,7 @@ paths:
           required: true
           schema:
             type: string
+            format: uuid
         - name: listId
           in: path
           description: provided user identifier
@@ -358,6 +364,7 @@ paths:
           required: true
           schema:
             type: string
+            format: uuid
 
       responses:
         '200':
@@ -365,7 +372,7 @@ paths:
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/TODO'
+                $ref: '#/components/schemas/List'
 
 
     delete:
@@ -381,6 +388,7 @@ paths:
           required: true
           schema:
             type: string
+            format: uuid
         - name: listId
           in: path
           description: provided user identifier
@@ -388,6 +396,7 @@ paths:
           required: true
           schema:
             type: string
+            format: uuid
       responses:
         '204':
           description: successful operation
@@ -406,6 +415,7 @@ paths:
           required: true
           schema:
             type: string
+            format: uuid
         - name: listId
           in: path
           description: provided user identifier
@@ -413,6 +423,7 @@ paths:
           required: true
           schema:
             type: string
+            format: uuid
 
       responses:
         '201':
@@ -420,7 +431,7 @@ paths:
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/TODO'
+                $ref: '#/components/schemas/AddMovie'
 
   /lists/{userId}/{listId}/remove/{movieId}:
     delete:
@@ -436,6 +447,7 @@ paths:
           required: true
           schema:
             type: string
+            format: uuid
         - name: listId
           in: path
           description: provided user identifier
@@ -443,6 +455,7 @@ paths:
           required: true
           schema:
             type: string
+            format: uuid
         - name: movieId
           in: path
           description: provided identifier for a movie
@@ -472,6 +485,7 @@ paths:
           required: true
           schema:
             type: string
+            format: uuid
 
       responses:
         '200':
@@ -479,7 +493,7 @@ paths:
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/TODO'
+                $ref: '#/components/schemas/Watchlist'
 
   /watchlist/{userId}/add:
     post:
@@ -495,13 +509,14 @@ paths:
           required: true
           schema:
             type: string
+            format: uuid
 
       requestBody:
         required: true
         content:
           application/json:
             schema:
-              $ref: '#/components/schemas/TODO'
+              $ref: '#/components/schemas/AddMovie'
 
       responses:
         '201':
@@ -525,6 +540,7 @@ paths:
           required: true
           schema:
             type: string
+            format: uuid
         - name: movieId
           in: path
           description: provided identifier for a movie
@@ -554,6 +570,7 @@ paths:
           required: true
           schema:
             type: string
+            format: uuid
 
       responses:
         '200':
@@ -577,13 +594,14 @@ paths:
           required: true
           schema:
             type: string
+            format: uuid
 
       requestBody:
         required: true
         content:
           application/json:
             schema:
-              $ref: '#/components/schemas/TODO'
+              $ref: '#/components/schemas/AddMovie'
 
       responses:
         '201':
@@ -607,6 +625,7 @@ paths:
           required: true
           schema:
             type: string
+            format: uuid
         - name: movieId
           in: path
           description: provided identifier for a movie
@@ -650,6 +669,7 @@ paths:
           required: true
           schema:
             type: string
+            format: uuid
 
       requestBody:
         required: true
@@ -680,6 +700,7 @@ paths:
           required: true
           schema:
             type: string
+            format: uuid
         - name: providerId
           in: path
           description: provided identifier for a stream provider
@@ -723,6 +744,7 @@ paths:
           required: true
           schema:
             type: string
+            format: uuid
 
       requestBody:
         required: true
@@ -753,6 +775,7 @@ paths:
           required: true
           schema:
             type: string
+            format: uuid
         - name: isoId
           in: path
           description: provided ISO 639-1 string representation of a language
@@ -765,18 +788,22 @@ paths:
           description: successful operation
 
 
-
-
 components:
   schemas:
-
-    TODO:
+    AddMovie:
+      description: object intended to be used for adding movies to a list
       type: object
+      required:
+        - movieId
+        - title
+      properties:
+        movieId:
+          type: integer
+          format: int64
+          example: 872585
+        title:
+          type: string
 
-
-    #
-    # MOVIE
-    #
     Movie:
       type: object
       required:
@@ -803,13 +830,39 @@ components:
         details:
           $ref: '#/components/schemas/MovieDetails'
 
+    MoviePreview:
+      type: object
+      required:
+        - movieId
+        - title
+        - imageUrl
+        - genres
+      properties:
+        movieId:
+          type: integer
+          format: int64
+          example: 872585
+        title:
+          type: string
+          example: 'Oppenheimer'
+        imageUrl:
+          type: string
+          example: 'https://image.tmdb.org/t/p/w500/8Gxv8gSFCU0XGDykEGv7zR1n2ua.jpg'
+        genres:
+          type: array
+          items:
+            type: string
+            example: 'Drama'
+
     MovieDetails:
       type: object
       required:
+        - overview
         - runtime
         - releaseDate
-        - overview
         - availableOn
+        - ratingAverage
+        - ratingVoteCount
       properties:
         overview:
           description: brief introduction to the plot of the movie
@@ -838,9 +891,24 @@ components:
           format: int32
           example: 5854
 
-    #
-    # USER
-    #
+    Poster:
+      type: object
+      required:
+        - posterImageUrl
+      properties:
+        posterImageUrl:
+          type: string
+          example: 'https://image.tmdb.org/t/p/w500/8Gxv8gSFCU0XGDykEGv7zR1n2ua.jpg'
+
+    Backdrop:
+      type: object
+      required:
+        - backdropImageUrl
+      properties:
+        backdropImageUrl:
+          type: string
+          example: 'https://image.tmdb.org/t/p/w500/rLb2cwF3Pazuxaj0sRXQ037tGI1.jpg'
+
     User:
       type: object
       required:
@@ -874,7 +942,6 @@ components:
       required:
         - spokenLanguages
         - subscribedStreamProviders
-
       properties:
         spokenLanguages:
           description: a list of Languages the user is able to understand
@@ -887,10 +954,56 @@ components:
           items:
             $ref: '#/components/schemas/StreamProvider'
 
+    List:
+      type: object
+      required:
+        - title
+        - createdBy
+        - createdAt
+        - imageUrl
+        - count
+        - movieList
+      properties:
+        title:
+          type: string
+          description: user-chosen name/identifier for list
+          example: 'my list 1'
+        createdBy:
+          $ref: '#/components/schemas/User'
+        createdAt:
+          type: string
+          format: date-time
+          description: timestamp of the lists creation-time
+          example: 2024/08/24 01:52:44
+        imageUrl:
+          type: string
+          description: URI to the image of a list
+        count:
+          type: integer
+          format: int32
+          description: number of movies contained in the list
+        movieList:
+          type: array
+          items:
+            $ref: '#/components/schemas/Movie'
+          description: list of movies a user added to this list
 
-    #
-    # FAVORITES
-    #
+    Watchlist:
+      type: object
+      required:
+        - count
+        - watchlist
+      properties:
+        count:
+          type: integer
+          format: int32
+          description: number of movies contained in the list
+        watchlist:
+          type: array
+          items:
+            $ref: '#/components/schemas/Movie'
+          description: list of movies the user wants to watch
+
     Favorites:
       type: object
       required:
@@ -907,10 +1020,6 @@ components:
             $ref: '#/components/schemas/Movie'
           description: list of favorite movies of a user
 
-
-    #
-    # STREAM PROVIDER
-    #
     StreamProvider:
       type: object
       required:
@@ -945,9 +1054,6 @@ components:
           items:
             $ref: '#/components/schemas/StreamProvider'
 
-    #
-    # LANGUAGES
-    #
     Language:
       type: object
       required:
