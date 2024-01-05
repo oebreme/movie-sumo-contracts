@@ -3,7 +3,7 @@ info:
   title: Movie Sumo API
   description: |-
 
-  version: 2.0.3
+  version: 2.0.4
 servers:
   - url: 'http://localhost:8080/api/v2'
   - url: 'https://movie-sumo-gateway.oebreme.dev/api/v2'
@@ -125,7 +125,7 @@ paths:
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/Poster'
+                $ref: '#/components/schemas/Image'
 
 
   /images/{movieId}/backdrop:
@@ -148,7 +148,7 @@ paths:
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/Backdrop'
+                $ref: '#/components/schemas/Image'
 
 
   /movies/trends:
@@ -786,7 +786,7 @@ components:
       required:
         - movieId
         - title
-        - imageUrl
+        - posterImageUrl
         - genres
       properties:
         movieId:
@@ -796,7 +796,7 @@ components:
         title:
           type: string
           example: 'Oppenheimer'
-        imageUrl:
+        posterImageUrl:
           type: string
           example: 'https://image.tmdb.org/t/p/w500/8Gxv8gSFCU0XGDykEGv7zR1n2ua.jpg'
         genres:
@@ -868,23 +868,14 @@ components:
           format: int32
           example: 5854
 
-    Poster:
+    Image:
       type: object
       required:
-        - posterImageUrl
+        - imageUrl
       properties:
-        posterImageUrl:
+        imageUrl:
           type: string
           example: 'https://image.tmdb.org/t/p/w500/8Gxv8gSFCU0XGDykEGv7zR1n2ua.jpg'
-
-    Backdrop:
-      type: object
-      required:
-        - backdropImageUrl
-      properties:
-        backdropImageUrl:
-          type: string
-          example: 'https://image.tmdb.org/t/p/w500/rLb2cwF3Pazuxaj0sRXQ037tGI1.jpg'
 
     User:
       type: object
