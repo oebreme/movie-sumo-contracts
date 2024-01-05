@@ -3,7 +3,7 @@ info:
   title: Movie Sumo API
   description: |-
 
-  version: 2.0.5
+  version: 2.0.6
 servers:
   - url: 'http://localhost:8080/api/v2'
   - url: 'https://movie-sumo-gateway.oebreme.dev/api/v2'
@@ -905,6 +905,32 @@ components:
         settings:
           $ref: '#/components/schemas/UserSettings'
 
+    UserPreview:
+      description: 'a smaller/reduced User object for displaying purposes'
+      type: object
+      required:
+        - userId
+        - email
+        - username
+        - profilePictureUrl
+      properties:
+        userId:
+          description: provided user identifier
+          example: '9389a6da-8d43-4049-ad28-048777751f68'
+          type: string
+        email:
+          description: email of the user
+          example: 'wald.guenther@provider.de'
+          type: string
+        username:
+          description: additional short name for displaying purposes - it is automatically build from the e-mail (everything pre-'@' symbol)
+          example: 'wald.guenther'
+          type: string
+        profilePictureUrl:
+          description: URI which points to the profile picture of the user
+          example: 'https://s.gravatar.com/avatar/31ab088c3283f6facde0474b9443e141?s=480&r=pg&d=https%3A%2F%2Fcdn.auth0.com%2Favatars%2Fcl.png'
+          type: string
+
     UserSettings:
       type: object
       required:
@@ -937,7 +963,7 @@ components:
           description: user-chosen name/identifier for list
           example: 'my list 1'
         createdBy:
-          $ref: '#/components/schemas/User'
+          $ref: '#/components/schemas/UserPreview'
         createdAt:
           type: string
           format: date-time
