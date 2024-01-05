@@ -3,7 +3,7 @@ info:
   title: Movie Sumo API
   description: |-
 
-  version: 2.0.4
+  version: 2.0.5
 servers:
   - url: 'http://localhost:8080/api/v2'
   - url: 'https://movie-sumo-gateway.oebreme.dev/api/v2'
