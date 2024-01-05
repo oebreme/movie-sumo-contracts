@@ -3,7 +3,7 @@ info:
   title: Movie Sumo API
   description: |-
 
-  version: 2.0.6
+  version: 2.0.7
 servers:
   - url: 'http://localhost:8080/api/v2'
   - url: 'https://movie-sumo-gateway.oebreme.dev/api/v2'
@@ -310,6 +310,14 @@ paths:
           schema:
             type: string
             format: uuid
+
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/AddList'
+
 
       responses:
         '201':
@@ -981,6 +989,16 @@ components:
           items:
             $ref: '#/components/schemas/Movie'
           description: list of movies a user added to this list
+
+    AddList:
+      type: object
+      required:
+        - title
+      properties:
+        title:
+          type: string
+          description: user-chosen name/identifier for list
+          example: 'my list 1'
 
     Watchlist:
       type: object
