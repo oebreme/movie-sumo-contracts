@@ -77,29 +77,6 @@ paths:
           description: Preview not found
 
 
-  /movies/{movieId}/streamproviders:
-    get:
-      tags:
-        - Movie
-      summary: get all watch-providers for a movie
-      description: returns a list of watch-providers which have the specific movie in their collection
-      parameters:
-        - name: movieId
-          in: path
-          description: id of Preview to return
-          required: true
-          schema:
-            type: integer
-            format: int64
-      responses:
-        '200':
-          description: successful operation
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/StreamProviderList'
-
-
   /movies/{movieId}/similar:
     get:
       tags:
