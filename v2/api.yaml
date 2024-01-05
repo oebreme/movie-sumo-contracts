@@ -3,7 +3,7 @@ info:
   title: Movie Sumo API
   description: |-
 
-  version: 2.0.7
+  version: 2.0.8
 servers:
   - url: 'http://localhost:8080/api/v2'
   - url: 'https://movie-sumo-gateway.oebreme.dev/api/v2'
@@ -410,13 +410,20 @@ paths:
             type: string
             format: uuid
 
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/AddMovie'
+
       responses:
         '201':
           description: successful operation
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/AddMovie'
+                $ref: '#/components/schemas/MoviePreview'
 
   /lists/{userId}/{listId}/remove/{movieId}:
     delete:
