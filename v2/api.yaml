@@ -812,7 +812,7 @@ components:
       required:
         - movieId
         - title
-        - imageUrl
+        - posterImageUrl
         - genres
       properties:
         movieId:
@@ -822,7 +822,7 @@ components:
         title:
           type: string
           example: 'Oppenheimer'
-        imageUrl:
+        posterImageUrl:
           type: string
           example: 'https://image.tmdb.org/t/p/w500/8Gxv8gSFCU0XGDykEGv7zR1n2ua.jpg'
         genres:
