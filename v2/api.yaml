@@ -3,7 +3,7 @@ info:
   title: Movie Sumo API
   description: |-
 
-  version: 2.0.1
+  version: 2.0.2
 servers:
   - url: 'http://localhost:8080/api/v2'
   - url: 'https://movie-sumo-gateway.oebreme.dev/api/v2'
@@ -1023,7 +1023,7 @@ components:
     StreamProvider:
       type: object
       required:
-        - id
+        - providerId
         - name
         - logoUrl
         - displayOrder
