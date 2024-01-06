@@ -3,7 +3,7 @@ info:
   title: Movie Sumo API
   description: |-
 
-  version: 2.0.10
+  version: 2.0.11
 servers:
   - url: 'http://localhost:8080/api/v2'
   - url: 'https://movie-sumo-gateway.oebreme.dev/api/v2'
@@ -718,7 +718,7 @@ paths:
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/Language'
+                $ref: '#/components/schemas/LanguageList'
 
   /languages/{userId}/add:
     post:
