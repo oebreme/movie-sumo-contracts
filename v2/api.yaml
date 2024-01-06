@@ -3,7 +3,7 @@ info:
   title: Movie Sumo API
   description: |-
 
-  version: 2.0.9
+  version: 2.0.10
 servers:
   - url: 'http://localhost:8080/api/v2'
   - url: 'https://movie-sumo-gateway.oebreme.dev/api/v2'
@@ -666,7 +666,7 @@ paths:
         content:
           application/json:
             schema:
-              $ref: '#/components/schemas/StreamProvider'
+              $ref: '#/components/schemas/AddStreamProvider'
 
       responses:
         '201':
@@ -741,7 +741,7 @@ paths:
         content:
           application/json:
             schema:
-              $ref: '#/components/schemas/Language'
+              $ref: '#/components/schemas/AddLanguage'
 
       responses:
         '201':
@@ -1071,6 +1071,19 @@ components:
           items:
             $ref: '#/components/schemas/StreamProvider'
 
+    AddStreamProvider:
+      type: object
+      required:
+        - providerId
+        - name
+      properties:
+        providerId:
+          type: string
+          example: 'd780d614-d3e0-4fdd-8979-487dcd074bb1'
+        name:
+          type: string
+          example: 'Apple TV'
+
     Language:
       type: object
       required:
@@ -1090,3 +1103,13 @@ components:
           type: array
           items:
             $ref: '#/components/schemas/Language'
+
+    AddLanguage:
+      type: object
+      required:
+        - isoId
+      properties:
+        isoId:
+          type: string
+          example: 'de'
+          description: ISO 639-1 string representation of a language
