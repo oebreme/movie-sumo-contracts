@@ -3,7 +3,7 @@ info:
   title: Movie Sumo API
   description: |-
 
-  version: 2.0.11
+  version: 2.0.12
 servers:
   - url: 'http://localhost:8080/api/v2'
   - url: 'https://movie-sumo-gateway.oebreme.dev/api/v2'
@@ -101,56 +101,6 @@ paths:
                 items:
                   $ref: '#/components/schemas/MoviePreview'
 
-
-  #
-  # IMAGE
-  #
-  /images/{movieId}/poster:
-    get:
-      tags:
-        - Image
-      summary: get the poster-image of a movie
-      description: returns a URI to the box-office-poster image of a movie
-      parameters:
-        - name: movieId
-          in: path
-          description: id of Movie
-          required: true
-          schema:
-            type: integer
-            format: int64
-      responses:
-        '200':
-          description: successful operation
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/Image'
-
-
-  /images/{movieId}/backdrop:
-    get:
-      tags:
-        - Image
-      summary: get the backdrop-image of a movie
-      description: returns a URI to the background image of the corresponding box-office-poster
-      parameters:
-        - name: movieId
-          in: path
-          description: id of Movie
-          required: true
-          schema:
-            type: integer
-            format: int64
-      responses:
-        '200':
-          description: successful operation
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/Image'
-
-
   /movies/trends:
     get:
       tags:
@@ -202,12 +152,64 @@ paths:
                   $ref: '#/components/schemas/MoviePreview'
 
 
+  #
+  # IMAGE
+  #
+  /images/{movieId}/poster:
+    get:
+      tags:
+        - Image
+      summary: get the poster-image of a movie
+      description: returns a URI to the box-office-poster image of a movie
+      parameters:
+        - name: movieId
+          in: path
+          description: id of Movie
+          required: true
+          schema:
+            type: integer
+            format: int64
+      responses:
+        '200':
+          description: successful operation
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Image'
+
+
+  /images/{movieId}/backdrop:
+    get:
+      tags:
+        - Image
+      summary: get the backdrop-image of a movie
+      description: returns a URI to the background image of the corresponding box-office-poster
+      parameters:
+        - name: movieId
+          in: path
+          description: id of Movie
+          required: true
+          schema:
+            type: integer
+            format: int64
+      responses:
+        '200':
+          description: successful operation
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Image'
+
+
+  #
+  # SEARCH
+  #
   /search/{queryTerm}/{page}:
     get:
       tags:
         - Search
       summary: search for a movie by a given String and page
-      description: returns multiple Movies which match to some extend with the provided String
+      description: returns multiple Movies which match to some extend with the provided String - If no page is provided, it will default to the first page
       parameters:
         - name: queryTerm
           in: path
@@ -218,7 +220,6 @@ paths:
         - name: page
           in: path
           description: page number to determine which Movies to fetch
-          required: true
           schema:
             type: integer
             format: int32
@@ -230,7 +231,7 @@ paths:
               schema:
                 type: array
                 items:
-                  $ref: '#/components/schemas/Movie'
+                  $ref: '#/components/schemas/SearchResultList'
         '400':
           description: invalid Id supplied
         '404':
@@ -889,6 +890,63 @@ components:
         imageUrl:
           type: string
           example: 'https://image.tmdb.org/t/p/w500/8Gxv8gSFCU0XGDykEGv7zR1n2ua.jpg'
+
+    SearchResult:
+      type: object
+      required:
+        - movieId
+        - title
+        - releaseDate
+        - posterImageUrl
+        - genres
+      properties:
+        movieId:
+          type: integer
+          format: int64
+          example: 872585
+        title:
+          type: string
+          example: 'Oppenheimer'
+        releaseDate:
+          type: string
+          format: date
+          description: release date of the movie
+          example: 2024/08/24
+        posterImageUrl:
+          type: string
+          example: 'https://image.tmdb.org/t/p/w500/8Gxv8gSFCU0XGDykEGv7zR1n2ua.jpg'
+        genres:
+          type: array
+          items:
+            type: string
+            example: 'Drama'
+
+    SearchResultList:
+      type: object
+      required:
+        - page
+        - totalPages
+        - results
+        - totalResults
+      properties:
+        page:
+          type: integer
+          format: int32
+          example: 1
+          description: 'current page of the paginated result'
+        totalPages:
+          type: integer
+          format: int32
+          example: 10
+          description: 'how many pages there are for this query'
+        results:
+          type: array
+          items:
+            $ref: '#/components/schemas/SearchResult'
+        totalResults:
+          type: integer
+          format: int32
+          example: 49
 
     User:
       type: object
