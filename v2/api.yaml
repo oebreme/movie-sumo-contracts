@@ -3,7 +3,7 @@ info:
   title: Movie Sumo API
   description: |-
 
-  version: 2.0.13
+  version: 2.0.14
 servers:
   - url: 'http://localhost:8080/api/v2'
   - url: 'https://movie-sumo-gateway.oebreme.dev/api/v2'
@@ -204,7 +204,7 @@ paths:
   #
   # SEARCH
   #
-  /search/{queryTerm}/{page}:
+  /search:
     get:
       tags:
         - Search
@@ -212,15 +212,14 @@ paths:
       description: returns multiple Movies which match to some extend with the provided String - If no page is provided, it will default to the first page
       parameters:
         - name: queryTerm
-          in: path
+          in: query
           description: provided String to search for
           required: true
           schema:
             type: string
         - name: page
-          in: path
-          description: page number to determine which Movies to fetch
-          required: true
+          in: query
+          description: page number to determine which Movies to fetch - defaults to '1' if no page is supplied
           schema:
             type: integer
             format: int32
