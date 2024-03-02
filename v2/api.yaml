@@ -3,14 +3,13 @@ info:
   title: Movie Sumo API
   description: |-
 
-  version: 2.0.15
+  version: 3.0.0-wip
 servers:
-  - url: 'http://localhost:8080/api/v2'
-  - url: 'https://movie-sumo-gateway.oebreme.dev/api/v2'
+  - url: 'http://localhost:8085/api/v3'
+  - url: 'https://movie-sumo-gateway.oebreme.dev/api/v3'
 
 tags:
   - name: Movie
-  - name: Image
   - name: Search
   - name: User
   - name: Lists
@@ -150,55 +149,6 @@ paths:
                 type: array
                 items:
                   $ref: '#/components/schemas/MoviePreview'
-
-
-  #
-  # IMAGE
-  #
-  /images/{movieId}/poster:
-    get:
-      tags:
-        - Image
-      summary: get the poster-image of a movie
-      description: returns a URI to the box-office-poster image of a movie
-      parameters:
-        - name: movieId
-          in: path
-          description: id of Movie
-          required: true
-          schema:
-            type: integer
-            format: int64
-      responses:
-        '200':
-          description: successful operation
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/Image'
-
-
-  /images/{movieId}/backdrop:
-    get:
-      tags:
-        - Image
-      summary: get the backdrop-image of a movie
-      description: returns a URI to the background image of the corresponding box-office-poster
-      parameters:
-        - name: movieId
-          in: path
-          description: id of Movie
-          required: true
-          schema:
-            type: integer
-            format: int64
-      responses:
-        '200':
-          description: successful operation
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/Image'
 
 
   #
@@ -909,14 +859,6 @@ components:
           format: int32
           example: 5854
 
-    Image:
-      type: object
-      required:
-        - imageUrl
-      properties:
-        imageUrl:
-          type: string
-          example: 'https://image.tmdb.org/t/p/w500/8Gxv8gSFCU0XGDykEGv7zR1n2ua.jpg'
 
     SearchResult:
       type: object
