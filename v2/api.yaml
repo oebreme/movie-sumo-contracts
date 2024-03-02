@@ -3,7 +3,7 @@ info:
   title: Movie Sumo API
   description: |-
 
-  version: 3.0.1-wip
+  version: 3.0.2-wip
 servers:
   - url: 'http://localhost:8085/api/v3'
   - url: 'https://movie-sumo-gateway.oebreme.dev/api/v3'
@@ -42,7 +42,7 @@ paths:
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/Movie'
+                $ref: '#/components/schemas/ExternalMovie'
         '400':
           description: invalid Id supplied
         '404':
@@ -609,7 +609,7 @@ paths:
   #
   # STREAM PROVIDERS
   #
-  /streamproviders:
+  /streamproviders/supported:
     get:
       tags:
         - Stream Provider
@@ -762,10 +762,10 @@ components:
       description: object intended to be used for adding movies to a list
       type: object
       required:
-        - movieId
+        - externalId
         - title
       properties:
-        movieId:
+        externalId:
           type: integer
           format: int64
           example: 872585
@@ -775,15 +775,20 @@ components:
     Movie:
       type: object
       required:
+        - externalId
         - movieId
         - title
         - posterImageUrl
         - genres
       properties:
-        movieId:
+        externalId:
           type: integer
           format: int64
           example: 872585
+        movieId:
+          type: string
+          format: uuid
+          example: '9389a6da-8d43-4049-ad28-048777751f68'
         title:
           type: string
           example: 'Oppenheimer'
@@ -857,7 +862,7 @@ components:
           format: date
           example: 2023-07-19
         availableOn:
-          $ref: '#/components/schemas/StreamProviderList'
+          $ref: '#/components/schemas/MovieProviderList'
         ratingAverage:
           description: floating point number representing user ratings of the movie
           type: number
@@ -868,6 +873,33 @@ components:
           type: integer
           format: int32
           example: 5854
+
+    ExternalMovie:
+      type: object
+      required:
+        - externalId
+        - title
+        - posterImageUrl
+        - genres
+        - details
+      properties:
+        externalId:
+          type: integer
+          format: int64
+          example: 872585
+        title:
+          type: string
+          example: 'Oppenheimer'
+        posterImageUrl:
+          type: string
+          example: 'https://image.tmdb.org/t/p/w500/8Gxv8gSFCU0XGDykEGv7zR1n2ua.jpg'
+        genres:
+          type: array
+          items:
+            type: string
+            example: "Drama"
+        details:
+          $ref: '#/components/schemas/ExternalMovieDetails'
 
     ExternalMoviePreview:
       type: object
@@ -897,6 +929,43 @@ components:
             type: string
             example: 'Drama'
 
+    ExternalMovieDetails:
+      type: object
+      required:
+        - overview
+        - runtime
+        - releaseDate
+        - availableOn
+        - ratingAverage
+        - ratingVoteCount
+      properties:
+        overview:
+          description: brief introduction to the plot of the movie
+          type: string
+          example: "The story of J. Robert Oppenheimer’s role in the development of the atomic bomb during World War II."
+        runtime:
+          description: length of the movie in minutes
+          type: integer
+          format: int32
+          example: 181
+        releaseDate:
+          description: first release of the movie anywhere in the world
+          type: string
+          example: 2023-07-19
+        availableOn:
+          $ref: '#/components/schemas/ExternalMovieProviderList'
+        ratingAverage:
+          description: floating point number representing user ratings of the movie
+          type: number
+          format: float
+          example: 8.119
+        ratingVoteCount:
+          description: number of votes which are used to calculate the ratingAverage
+          type: integer
+          format: int32
+          example: 5854
+
+
     SearchResult:
       type: object
       required:
@@ -907,9 +976,9 @@ components:
         - genres
       properties:
         movieId:
-          type: integer
-          format: int64
-          example: 872585
+          type: string
+          format: uuid
+          example: '9389a6da-8d43-4049-ad28-048777751f68'
         title:
           type: string
           example: 'Oppenheimer'
@@ -1122,14 +1191,19 @@ components:
             $ref: '#/components/schemas/Movie'
           description: list of favorite movies of a user
 
-    StreamProvider:
+    MovieProvider:
       type: object
       required:
+        - externalId
         - providerId
         - name
         - logoUrl
         - displayOrder
       properties:
+        externalId:
+          type: integer
+          format: int64
+          example: 872585
         providerId:
           type: string
           example: 'd780d614-d3e0-4fdd-8979-487dcd074bb1'
@@ -1145,8 +1219,102 @@ components:
           description: order for provider relevancy - "1" being most relevant provider
           example: 4
 
-    StreamProviderList:
+    MovieProviderList:
       description: information about where this movie is available for streaming, renting or buying
+      type: object
+      required:
+        - providers
+      properties:
+        providers:
+          type: array
+          items:
+            $ref: '#/components/schemas/MovieProvider'
+
+    AddMovieProvider:
+      type: object
+      required:
+        - externalId
+        - name
+        - logoUrl
+        - displayOrder
+      properties:
+        externalId:
+          type: integer
+          format: int64
+          example: 872585
+        name:
+          type: string
+          example: 'Apple TV'
+        logoUrl:
+          type: string
+          example: 'https://image.tmdb.org/t/p/w500/peURlLlr8jggOwK53fJ5wdQl05y.jpg'
+        displayOrder:
+          type: integer
+          format: int32
+          description: order for provider relevancy - "1" being most relevant provider
+          example: 4
+
+    ExternalMovieProvider:
+      type: object
+      required:
+        - externalId
+        - name
+        - logoUrl
+        - displayOrder
+      properties:
+        externalId:
+          type: integer
+          format: int64
+          example: 872585
+        name:
+          type: string
+          example: 'Apple TV'
+        logoUrl:
+          type: string
+          example: 'https://image.tmdb.org/t/p/w500/peURlLlr8jggOwK53fJ5wdQl05y.jpg'
+        displayOrder:
+          type: integer
+          format: int32
+          description: order for provider relevancy - "1" being most relevant provider
+          example: 4
+
+    ExternalMovieProviderList:
+      description: external information about where this movie is available for streaming, renting or buying
+      type: object
+      required:
+        - providers
+      properties:
+        providers:
+          type: array
+          items:
+            $ref: '#/components/schemas/ExternalMovieProvider'
+
+    StreamProvider:
+      type: object
+      required:
+        - externalId
+        - name
+        - logoUrl
+        - displayOrder
+      properties:
+        externalId:
+          type: integer
+          format: int64
+          example: 872585
+        name:
+          type: string
+          example: 'Apple TV'
+        logoUrl:
+          type: string
+          example: 'https://image.tmdb.org/t/p/w500/peURlLlr8jggOwK53fJ5wdQl05y.jpg'
+        displayOrder:
+          type: integer
+          format: int32
+          description: order for provider relevancy - "1" being most relevant provider
+          example: 4
+
+    StreamProviderList:
+      description: general information about which providers are supported by this app
       type: object
       required:
         - providers
@@ -1159,15 +1327,26 @@ components:
     AddStreamProvider:
       type: object
       required:
-        - providerId
+        - externalId
         - name
+        - logoUrl
+        - displayOrder
       properties:
-        providerId:
-          type: string
-          example: 'd780d614-d3e0-4fdd-8979-487dcd074bb1'
+        externalId:
+          type: integer
+          format: int64
+          example: 872585
         name:
           type: string
           example: 'Apple TV'
+        logoUrl:
+          type: string
+          example: 'https://image.tmdb.org/t/p/w500/peURlLlr8jggOwK53fJ5wdQl05y.jpg'
+        displayOrder:
+          type: integer
+          format: int32
+          description: order for provider relevancy - "1" being most relevant provider
+          example: 4
 
     Language:
       type: object
