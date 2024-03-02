@@ -3,7 +3,7 @@ info:
   title: Movie Sumo API
   description: |-
 
-  version: 3.0.4-wip
+  version: 3.0.5-wip
 servers:
   - url: 'http://localhost:8085/api/v3'
   - url: 'https://movie-sumo-gateway.oebreme.dev/api/v3'
@@ -181,7 +181,7 @@ paths:
               schema:
                 type: array
                 items:
-                  $ref: '#/components/schemas/SearchResultList'
+                  $ref: '#/components/schemas/MovieSearchResultList'
         '400':
           description: invalid Id supplied
         '404':
@@ -965,26 +965,24 @@ components:
           format: int32
           example: 5854
 
-
-    SearchResult:
+    MovieSearchResult:
       type: object
       required:
-        - movieId
+        - externalId
         - title
         - releaseDate
         - posterImageUrl
         - genres
       properties:
-        movieId:
-          type: string
-          format: uuid
-          example: '9389a6da-8d43-4049-ad28-048777751f68'
+        externalId:
+          type: integer
+          format: int64
+          example: 872585
         title:
           type: string
           example: 'Oppenheimer'
         releaseDate:
           type: string
-          format: date
           description: release date of the movie
           example: 2024/08/24
         posterImageUrl:
@@ -996,7 +994,7 @@ components:
             type: string
             example: 'Drama'
 
-    SearchResultList:
+    MovieSearchResultList:
       type: object
       required:
         - page
@@ -1017,7 +1015,7 @@ components:
         results:
           type: array
           items:
-            $ref: '#/components/schemas/SearchResult'
+            $ref: '#/components/schemas/MovieSearchResult'
         totalResults:
           type: integer
           format: int32
@@ -1235,8 +1233,6 @@ components:
       required:
         - externalId
         - name
-        - logoUrl
-        - displayOrder
       properties:
         externalId:
           type: integer
@@ -1245,14 +1241,6 @@ components:
         name:
           type: string
           example: 'Apple TV'
-        logoUrl:
-          type: string
-          example: 'https://image.tmdb.org/t/p/w500/peURlLlr8jggOwK53fJ5wdQl05y.jpg'
-        displayOrder:
-          type: integer
-          format: int32
-          description: order for provider relevancy - "1" being most relevant provider
-          example: 4
 
     ExternalMovieProvider:
       type: object
@@ -1329,8 +1317,6 @@ components:
       required:
         - externalId
         - name
-        - logoUrl
-        - displayOrder
       properties:
         externalId:
           type: integer
@@ -1339,14 +1325,6 @@ components:
         name:
           type: string
           example: 'Apple TV'
-        logoUrl:
-          type: string
-          example: 'https://image.tmdb.org/t/p/w500/peURlLlr8jggOwK53fJ5wdQl05y.jpg'
-        displayOrder:
-          type: integer
-          format: int32
-          description: order for provider relevancy - "1" being most relevant provider
-          example: 4
 
     SupportedLanguage:
       type: object
