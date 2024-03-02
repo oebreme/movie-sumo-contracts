@@ -3,7 +3,7 @@ info:
   title: Movie Sumo API
   description: |-
 
-  version: 3.0.2-wip
+  version: 3.0.3-wip
 servers:
   - url: 'http://localhost:8085/api/v3'
   - url: 'https://movie-sumo-gateway.oebreme.dev/api/v3'
@@ -621,7 +621,7 @@ paths:
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/StreamProviderList'
+                $ref: '#/components/schemas/SupportedStreamProviderList'
 
   /streamproviders/{userId}/add:
     post:
@@ -644,7 +644,7 @@ paths:
         content:
           application/json:
             schema:
-              $ref: '#/components/schemas/AddStreamProvider'
+              $ref: '#/components/schemas/AddSupportedStreamProvider'
 
       responses:
         '201':
@@ -652,7 +652,7 @@ paths:
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/StreamProvider'
+                $ref: '#/components/schemas/SupportedStreamProvider'
 
   /streamproviders/{userId}/remove/{providerId}:
     delete:
@@ -1113,7 +1113,7 @@ components:
           description: a list of StreamProviders the user is currently subscribed to
           type: array
           items:
-            $ref: '#/components/schemas/StreamProvider'
+            $ref: '#/components/schemas/SupportedStreamProvider'
 
     List:
       type: object
@@ -1289,7 +1289,7 @@ components:
           items:
             $ref: '#/components/schemas/ExternalMovieProvider'
 
-    StreamProvider:
+    SupportedStreamProvider:
       type: object
       required:
         - externalId
@@ -1313,7 +1313,7 @@ components:
           description: order for provider relevancy - "1" being most relevant provider
           example: 4
 
-    StreamProviderList:
+    SupportedStreamProviderList:
       description: general information about which providers are supported by this app
       type: object
       required:
@@ -1322,9 +1322,9 @@ components:
         providers:
           type: array
           items:
-            $ref: '#/components/schemas/StreamProvider'
+            $ref: '#/components/schemas/SupportedStreamProvider'
 
-    AddStreamProvider:
+    AddSupportedStreamProvider:
       type: object
       required:
         - externalId
