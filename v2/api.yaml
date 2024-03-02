@@ -3,7 +3,7 @@ info:
   title: Movie Sumo API
   description: |-
 
-  version: 3.0.3-wip
+  version: 3.0.4-wip
 servers:
   - url: 'http://localhost:8085/api/v3'
   - url: 'https://movie-sumo-gateway.oebreme.dev/api/v3'
@@ -684,7 +684,7 @@ paths:
   #
   # LANGUAGES
   #
-  /languages:
+  /languages/supported:
     get:
       tags:
         - Language
@@ -696,7 +696,7 @@ paths:
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/LanguageList'
+                $ref: '#/components/schemas/SupportedLanguageList'
 
   /languages/{userId}/add:
     post:
@@ -719,7 +719,7 @@ paths:
         content:
           application/json:
             schema:
-              $ref: '#/components/schemas/AddLanguage'
+              $ref: '#/components/schemas/AddSupportedLanguage'
 
       responses:
         '201':
@@ -727,7 +727,7 @@ paths:
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/Language'
+                $ref: '#/components/schemas/SupportedLanguage'
 
   /languages/{userId}/remove/{isoId}:
     delete:
@@ -1108,7 +1108,7 @@ components:
           description: a list of Languages the user is able to understand
           type: array
           items:
-            $ref: '#/components/schemas/Language'
+            $ref: '#/components/schemas/SupportedLanguage'
         subscribedStreamProviders:
           description: a list of StreamProviders the user is currently subscribed to
           type: array
@@ -1348,7 +1348,7 @@ components:
           description: order for provider relevancy - "1" being most relevant provider
           example: 4
 
-    Language:
+    SupportedLanguage:
       type: object
       required:
         - isoId
@@ -1358,7 +1358,7 @@ components:
           example: 'de'
           description: ISO 639-1 string representation of a language
 
-    LanguageList:
+    SupportedLanguageList:
       type: object
       required:
         - languages
@@ -1366,9 +1366,9 @@ components:
         languages:
           type: array
           items:
-            $ref: '#/components/schemas/Language'
+            $ref: '#/components/schemas/SupportedLanguage'
 
-    AddLanguage:
+    AddSupportedLanguage:
       type: object
       required:
         - isoId
