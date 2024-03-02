@@ -3,7 +3,7 @@ info:
   title: Movie Sumo API
   description: |-
 
-  version: 3.0.0-wip
+  version: 3.0.1-wip
 servers:
   - url: 'http://localhost:8085/api/v3'
   - url: 'https://movie-sumo-gateway.oebreme.dev/api/v3'
@@ -22,14 +22,14 @@ paths:
   #
   # MOVIES
   #
-  /movies/{movieId}:
+  /movies/{externalMovieId}:
     get:
       tags:
         - Movie
       summary: get a movie by Id
       description: returns a single Movie
       parameters:
-        - name: movieId
+        - name: externalMovieId
           in: path
           description: identifier of Movie to return
           required: true
@@ -49,14 +49,14 @@ paths:
           description: Movie not found
 
 
-  /movies/{movieId}/preview:
+  /movies/{externalMovieId}/preview:
     get:
       tags:
         - Movie
       summary: get a preview of a movie
       description: returns a smaller/reduced Movie object for preview purposes
       parameters:
-        - name: movieId
+        - name: externalMovieId
           in: path
           description: id of MoviePreview to return
           required: true
@@ -69,21 +69,21 @@ paths:
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/MoviePreview'
+                $ref: '#/components/schemas/ExternalMoviePreview'
         '400':
           description: invalid Id supplied
         '404':
           description: Preview not found
 
 
-  /movies/{movieId}/similar:
+  /movies/{externalMovieId}/similar:
     get:
       tags:
         - Movie
       summary: get similar movies of a movie
       description: returns a list with similar movies, based on genre and story-summary-keywords
       parameters:
-        - name: movieId
+        - name: externalMovieId
           in: path
           description: id of Movie which the similar results will be based on
           required: true
@@ -98,7 +98,7 @@ paths:
               schema:
                 type: array
                 items:
-                  $ref: '#/components/schemas/MoviePreview'
+                  $ref: '#/components/schemas/ExternalMoviePreview'
 
   /movies/trends:
     get:
@@ -114,7 +114,7 @@ paths:
               schema:
                 type: array
                 items:
-                  $ref: '#/components/schemas/MoviePreview'
+                  $ref: '#/components/schemas/ExternalMoviePreview'
 
 
   /movies/best:
@@ -131,7 +131,7 @@ paths:
               schema:
                 type: array
                 items:
-                  $ref: '#/components/schemas/MoviePreview'
+                  $ref: '#/components/schemas/ExternalMoviePreview'
 
 
   /movies/upcoming:
@@ -148,7 +148,7 @@ paths:
               schema:
                 type: array
                 items:
-                  $ref: '#/components/schemas/MoviePreview'
+                  $ref: '#/components/schemas/ExternalMoviePreview'
 
 
   #
@@ -802,11 +802,17 @@ components:
       type: object
       required:
         - movieId
+        - externalId
         - title
         - posterImageUrl
+        - releaseDate
         - genres
       properties:
         movieId:
+          type: string
+          format: uuid
+          example: '9389a6da-8d43-4049-ad28-048777751f68'
+        externalId:
           type: integer
           format: int64
           example: 872585
@@ -816,6 +822,10 @@ components:
         posterImageUrl:
           type: string
           example: 'https://image.tmdb.org/t/p/w500/8Gxv8gSFCU0XGDykEGv7zR1n2ua.jpg'
+        releaseDate:
+          description: first release of the movie anywhere in the world
+          type: string
+          example: 2023-07-19
         genres:
           type: array
           items:
@@ -859,6 +869,33 @@ components:
           format: int32
           example: 5854
 
+    ExternalMoviePreview:
+      type: object
+      required:
+        - externalId
+        - title
+        - posterImageUrl
+        - releaseDate
+        - genres
+      properties:
+        externalId:
+          type: integer
+          format: int64
+          example: 872585
+        title:
+          type: string
+          example: 'Oppenheimer'
+        posterImageUrl:
+          type: string
+          example: 'https://image.tmdb.org/t/p/w500/8Gxv8gSFCU0XGDykEGv7zR1n2ua.jpg'
+        releaseDate:
+          description: first release of the movie anywhere in the world
+          type: string
+        genres:
+          type: array
+          items:
+            type: string
+            example: 'Drama'
 
     SearchResult:
       type: object
