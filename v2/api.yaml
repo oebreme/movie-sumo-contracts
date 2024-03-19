@@ -3,7 +3,7 @@ info:
   title: Movie Sumo API
   description: |-
 
-  version: 3.0.5-wip
+  version: 3.0.6
 servers:
   - url: 'http://localhost:8085/api/v3'
   - url: 'https://movie-sumo-gateway.oebreme.dev/api/v3'
@@ -42,7 +42,7 @@ paths:
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/ExternalMovie'
+                $ref: '#/components/schemas/Movie'
         '400':
           description: invalid Id supplied
         '404':
@@ -69,7 +69,7 @@ paths:
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/ExternalMoviePreview'
+                $ref: '#/components/schemas/MoviePreview'
         '400':
           description: invalid Id supplied
         '404':
@@ -98,7 +98,7 @@ paths:
               schema:
                 type: array
                 items:
-                  $ref: '#/components/schemas/ExternalMoviePreview'
+                  $ref: '#/components/schemas/MoviePreview'
 
   /movies/trends:
     get:
@@ -114,7 +114,7 @@ paths:
               schema:
                 type: array
                 items:
-                  $ref: '#/components/schemas/ExternalMoviePreview'
+                  $ref: '#/components/schemas/MoviePreview'
 
 
   /movies/best:
@@ -131,7 +131,7 @@ paths:
               schema:
                 type: array
                 items:
-                  $ref: '#/components/schemas/ExternalMoviePreview'
+                  $ref: '#/components/schemas/MoviePreview'
 
 
   /movies/upcoming:
@@ -148,7 +148,7 @@ paths:
               schema:
                 type: array
                 items:
-                  $ref: '#/components/schemas/ExternalMoviePreview'
+                  $ref: '#/components/schemas/MoviePreview'
 
 
   #
@@ -775,20 +775,21 @@ components:
     Movie:
       type: object
       required:
-        - externalId
         - movieId
+        - externalId
         - title
         - posterImageUrl
         - genres
+        - details
       properties:
-        externalId:
-          type: integer
-          format: int64
-          example: 872585
         movieId:
           type: string
           format: uuid
           example: '9389a6da-8d43-4049-ad28-048777751f68'
+        externalId:
+          type: integer
+          format: int64
+          example: 872585
         title:
           type: string
           example: 'Oppenheimer'
@@ -806,17 +807,12 @@ components:
     MoviePreview:
       type: object
       required:
-        - movieId
         - externalId
         - title
         - posterImageUrl
         - releaseDate
         - genres
       properties:
-        movieId:
-          type: string
-          format: uuid
-          example: '9389a6da-8d43-4049-ad28-048777751f68'
         externalId:
           type: integer
           format: int64
@@ -874,132 +870,12 @@ components:
           format: int32
           example: 5854
 
-    ExternalMovie:
-      type: object
-      required:
-        - externalId
-        - title
-        - posterImageUrl
-        - genres
-        - details
-      properties:
-        externalId:
-          type: integer
-          format: int64
-          example: 872585
-        title:
-          type: string
-          example: 'Oppenheimer'
-        posterImageUrl:
-          type: string
-          example: 'https://image.tmdb.org/t/p/w500/8Gxv8gSFCU0XGDykEGv7zR1n2ua.jpg'
-        genres:
-          type: array
-          items:
-            type: string
-            example: "Drama"
-        details:
-          $ref: '#/components/schemas/ExternalMovieDetails'
-
-    ExternalMoviePreview:
-      type: object
-      required:
-        - externalId
-        - title
-        - posterImageUrl
-        - releaseDate
-        - genres
-      properties:
-        externalId:
-          type: integer
-          format: int64
-          example: 872585
-        title:
-          type: string
-          example: 'Oppenheimer'
-        posterImageUrl:
-          type: string
-          example: 'https://image.tmdb.org/t/p/w500/8Gxv8gSFCU0XGDykEGv7zR1n2ua.jpg'
-        releaseDate:
-          description: first release of the movie anywhere in the world
-          type: string
-        genres:
-          type: array
-          items:
-            type: string
-            example: 'Drama'
-
-    ExternalMovieDetails:
-      type: object
-      required:
-        - overview
-        - runtime
-        - releaseDate
-        - availableOn
-        - ratingAverage
-        - ratingVoteCount
-      properties:
-        overview:
-          description: brief introduction to the plot of the movie
-          type: string
-          example: "The story of J. Robert Oppenheimer’s role in the development of the atomic bomb during World War II."
-        runtime:
-          description: length of the movie in minutes
-          type: integer
-          format: int32
-          example: 181
-        releaseDate:
-          description: first release of the movie anywhere in the world
-          type: string
-          example: 2023-07-19
-        availableOn:
-          $ref: '#/components/schemas/ExternalMovieProviderList'
-        ratingAverage:
-          description: floating point number representing user ratings of the movie
-          type: number
-          format: float
-          example: 8.119
-        ratingVoteCount:
-          description: number of votes which are used to calculate the ratingAverage
-          type: integer
-          format: int32
-          example: 5854
-
-    MovieSearchResult:
-      type: object
-      required:
-        - externalId
-        - title
-        - releaseDate
-        - posterImageUrl
-        - genres
-      properties:
-        externalId:
-          type: integer
-          format: int64
-          example: 872585
-        title:
-          type: string
-          example: 'Oppenheimer'
-        releaseDate:
-          type: string
-          description: release date of the movie
-          example: 2024/08/24
-        posterImageUrl:
-          type: string
-          example: 'https://image.tmdb.org/t/p/w500/8Gxv8gSFCU0XGDykEGv7zR1n2ua.jpg'
-        genres:
-          type: array
-          items:
-            type: string
-            example: 'Drama'
-
     MovieSearchResultList:
       type: object
       required:
         - page
-        - totalPages
         - results
+        - totalPages
         - totalResults
       properties:
         page:
@@ -1007,15 +883,15 @@ components:
           format: int32
           example: 1
           description: 'current page of the paginated result'
+        results:
+          type: array
+          items:
+            $ref: '#/components/schemas/MoviePreview'
         totalPages:
           type: integer
           format: int32
           example: 10
           description: 'how many pages there are for this query'
-        results:
-          type: array
-          items:
-            $ref: '#/components/schemas/MovieSearchResult'
         totalResults:
           type: integer
           format: int32
@@ -1193,7 +1069,6 @@ components:
       type: object
       required:
         - externalId
-        - providerId
         - name
         - logoUrl
         - displayOrder
@@ -1202,9 +1077,6 @@ components:
           type: integer
           format: int64
           example: 872585
-        providerId:
-          type: string
-          example: 'd780d614-d3e0-4fdd-8979-487dcd074bb1'
         name:
           type: string
           example: 'Apple TV'
@@ -1241,41 +1113,6 @@ components:
         name:
           type: string
           example: 'Apple TV'
-
-    ExternalMovieProvider:
-      type: object
-      required:
-        - externalId
-        - name
-        - logoUrl
-        - displayOrder
-      properties:
-        externalId:
-          type: integer
-          format: int64
-          example: 872585
-        name:
-          type: string
-          example: 'Apple TV'
-        logoUrl:
-          type: string
-          example: 'https://image.tmdb.org/t/p/w500/peURlLlr8jggOwK53fJ5wdQl05y.jpg'
-        displayOrder:
-          type: integer
-          format: int32
-          description: order for provider relevancy - "1" being most relevant provider
-          example: 4
-
-    ExternalMovieProviderList:
-      description: external information about where this movie is available for streaming, renting or buying
-      type: object
-      required:
-        - providers
-      properties:
-        providers:
-          type: array
-          items:
-            $ref: '#/components/schemas/ExternalMovieProvider'
 
     SupportedStreamProvider:
       type: object
