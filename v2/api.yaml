@@ -3,7 +3,7 @@ info:
   title: Movie Sumo API
   description: |-
 
-  version: 3.0.6
+  version: 3.0.7
 servers:
   - url: 'http://localhost:8085/api/v3'
   - url: 'https://movie-sumo-gateway.oebreme.dev/api/v3'
@@ -15,7 +15,7 @@ tags:
   - name: Lists
   - name: Watchlist
   - name: Favorites
-  - name: Stream Provider
+  - name: Provider
   - name: Language
 
 paths:
@@ -607,12 +607,12 @@ paths:
 
 
   #
-  # STREAM PROVIDERS
+  # PROVIDERS
   #
   /streamproviders/supported:
     get:
       tags:
-        - Stream Provider
+        - Provider
       summary: get all currently supported streaming providers
       description: returns a list of StreamingProviders objects containing all streaming providers which are currently supported by the app
       responses:
@@ -621,12 +621,12 @@ paths:
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/SupportedStreamProviderList'
+                $ref: '#/components/schemas/SupportedProviderList'
 
   /streamproviders/{userId}/add:
     post:
       tags:
-        - Stream Provider
+        - Provider
       summary: add a stream provider to a user
       description: add a stream provider which the user has an active subscription for
       parameters:
@@ -644,7 +644,7 @@ paths:
         content:
           application/json:
             schema:
-              $ref: '#/components/schemas/AddSupportedStreamProvider'
+              $ref: '#/components/schemas/AddSupportedProvider'
 
       responses:
         '201':
@@ -652,12 +652,12 @@ paths:
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/SupportedStreamProvider'
+                $ref: '#/components/schemas/SupportedProvider'
 
   /streamproviders/{userId}/remove/{providerId}:
     delete:
       tags:
-        - Stream Provider
+        - Provider
       summary: removes a stream provider from a user
       description: removes a stream provider by its providerId
       parameters:
@@ -987,7 +987,7 @@ components:
           description: a list of StreamProviders the user is currently subscribed to
           type: array
           items:
-            $ref: '#/components/schemas/SupportedStreamProvider'
+            $ref: '#/components/schemas/SupportedProvider'
 
     List:
       type: object
@@ -1114,7 +1114,7 @@ components:
           type: string
           example: 'Apple TV'
 
-    SupportedStreamProvider:
+    SupportedProvider:
       type: object
       required:
         - externalId
@@ -1138,7 +1138,7 @@ components:
           description: order for provider relevancy - "1" being most relevant provider
           example: 4
 
-    SupportedStreamProviderList:
+    SupportedProviderList:
       description: general information about which providers are supported by this app
       type: object
       required:
@@ -1147,9 +1147,9 @@ components:
         providers:
           type: array
           items:
-            $ref: '#/components/schemas/SupportedStreamProvider'
+            $ref: '#/components/schemas/SupportedProvider'
 
-    AddSupportedStreamProvider:
+    AddSupportedProvider:
       type: object
       required:
         - externalId
